@@ -16,7 +16,7 @@ pytestmark = pytest.mark.simulator_required
 
 
 @cocotb.test()
-async def dff_simple_test(dut):
+async def dff (dut):
     """Test that d propagates to q"""
 
     clock = Clock(dut.clk, 10, units="us")  # Create a 10us period clock on port clk
@@ -29,8 +29,8 @@ async def dff_simple_test(dut):
         await FallingEdge(dut.clk)
         assert dut.q.value == val, f"output q was incorrect on the {i}th cycle"
 
-
-def test_simple_dff_runner():
+@cocotb.test()
+async def test_dff (dut):
 
     toplevel_lang = os.getenv("TOPLEVEL_LANG", "verilog")
     sim = os.getenv("SIM", "icarus")
@@ -38,16 +38,14 @@ def test_simple_dff_runner():
     proj_path = Path(__file__).resolve().parent
 
     verilog_sources = []
-    vhdl_sources = []
 
     if toplevel_lang == "verilog":
         verilog_sources = [proj_path / "dff.sv"]
-    else:
-        vhdl_sources = [proj_path / "dff.vhdl"]
-
+    end 
+    
     runner = get_runner(sim)()
     runner.build(
-        verilog_sources=verilog_sources, vhdl_sources=vhdl_sources, toplevel="dff"
+        verilog_sources=verilog_sources, toplevel="dff"
     )
 
     runner.test(toplevel="dff", py_module="test_dff")
