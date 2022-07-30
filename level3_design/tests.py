@@ -32,21 +32,21 @@ class DffTB(object):
             self.dut.log.info("[OK]")
 
 
-@cocotb.coroutine
-def clock_gen(signal):
-    while True:
-        signal <= 0
-        yield Timer(5000)
-        signal <= 1
-        yield Timer(5000)
+    @cocotb.coroutine
+    def clock_gen(signal):
+        while True:
+            signal <= 0
+            yield Timer(5000)
+            signal <= 1
+            yield Timer(5000)
 
-@cocotb.test()
-def basic_test(dut):
+    @cocotb.test()
+    def basic_test(dut):
     """basic_test"""
-    tb = DffTB(dut)
-    cocotb.fork(clock_gen(dut.CLK))
-    yield RisingEdge(dut.CLK)
-    yield tb.reset()
+        tb = DffTB(dut)
+        cocotb.fork(clock_gen(dut.CLK))
+        yield RisingEdge(dut.CLK)
+        yield tb.reset()
 
     for i in range(30):
         yield tb.gen_and_check()
