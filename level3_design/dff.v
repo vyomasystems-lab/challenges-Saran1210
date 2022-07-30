@@ -1,22 +1,14 @@
-module dff #
- (
-  parameter WIDTH = 8
- )
-
- (
-  input [0:0] CLK, 
-  input [0:0] RST, 
-  input [(WIDTH - 1):0] D, 
-  output reg [(WIDTH - 1):0] Q
+module dff (
+  input CLK, RST, D, 
+  output reg Q
  );
-
-  always @(posedge CLK)
+  
+  always @(posedge CLK or posedge RST)
   begin        
-  if(RST) begin        
+  if(RST)         
   Q <= 0;
-  end  
-  else begin        
+  else        
   Q <= D;
-  end 
-  end 
-endmodule
+  end
+
+  endmodule
